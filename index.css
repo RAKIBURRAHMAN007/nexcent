@@ -1,4 +1,8 @@
 /* i did responsive with bootstrap class  */
+body {
+  width: 100%;
+  margin: 0px;
+}
 .card {
   background: white;
   padding: 20px;
