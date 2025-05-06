@@ -168,5 +168,6 @@ body {
 
 .overlay-content a:hover {
   text-decoration: underline;
+  /*  shifts the element left by 50% of its own width */
 }
 /* rakibur rahman ratul */
