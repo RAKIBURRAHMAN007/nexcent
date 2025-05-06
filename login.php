@@ -1,9 +1,31 @@
+<?php
+session_start();
+include 'connect.php'; // Make sure connect.php has the DB connection
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+  $email = $_POST['email'];
+  $pass = $_POST['pass'];
+
+  $query = "SELECT * FROM users WHERE email='$email'";
+  $result = mysqli_query($connect, $query);
+  $user = mysqli_fetch_assoc($result);
+
+  if ($user && password_verify($pass, $user['password'])) {
+    $_SESSION['uname'] = $user['name'];
+    echo "<script>window.location='home.php';</script>";
+    exit;
+  } else {
+    echo "<script>alert('Invalid email or password');</script>";
+  }
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Nexcent | Register</title>
+    <title>Nexcent | Login</title>
     <!-- Bootstrap CSS -->
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
@@ -26,28 +48,18 @@
               class="mb-2"
             />
           </a>
-          <h4 class="fw-bold">Register to Nexcent</h4>
+          <h4 class="fw-bold">Login to Nexcent</h4>
         </div>
-        <form>
-          <div class="mb-3">
-            <label for="name" class="form-label text-start d-block"
-              >Full Name</label
-            >
-            <input
-              type="text"
-              class="form-control"
-              id="name"
-              placeholder="Enter your full name"
-              required
-            />
-          </div>
 
+        <!-- Login Form -->
+        <form method="POST">
           <div class="mb-3">
             <label for="email" class="form-label text-start d-block"
               >Email address</label
             >
             <input
               type="email"
+              name="email"
               class="form-control"
               id="email"
               placeholder="Enter your email"
@@ -61,6 +73,7 @@
             >
             <input
               type="password"
+              name="pass"
               class="form-control"
               id="password"
               placeholder="Enter your password"
@@ -74,14 +87,14 @@
               class="btn btn-success"
               style="background-color: #4caf4f"
             >
-              Register
+              Login
             </button>
           </div>
 
           <div class="text-center">
             <small>
-              Already have an account?
-              <a href="login.html" class="text-decoration-none">Login here</a>
+              Don't have an account?
+              <a href="register.php" class="text-decoration-none">Register here</a>
             </small>
           </div>
         </form>

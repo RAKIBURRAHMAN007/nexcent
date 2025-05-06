@@ -1,3 +1,27 @@
+<?php
+include 'connect.php';
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+  $name = $_POST['name'];
+  $email = $_POST['email'];
+  $pass = $_POST['password'];
+  $hashedPass = password_hash($pass, PASSWORD_DEFAULT);
+
+  $check = mysqli_query($connect, "SELECT * FROM users WHERE email='$email'");
+
+  if (mysqli_num_rows($check) > 0) {
+    echo "<script>alert('Email already registered');</script>";
+  } else {
+    $insert = "INSERT INTO users (name, email, password) VALUES ('$name', '$email', '$hashedPass')";
+    if (mysqli_query($connect, $insert)) {
+      echo "<script>alert('Registered successfully'); window.location='login.php';</script>";
+    } else {
+      echo "<script>alert('Registration failed');</script>";
+    }
+  }
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -28,41 +52,38 @@
           </a>
           <h4 class="fw-bold">Register to Nexcent</h4>
         </div>
-        <form>
+        <form method="POST">
           <div class="mb-3">
-            <label for="name" class="form-label text-start d-block"
-              >Full Name</label
-            >
+            <label for="name" class="form-label text-start d-block">Full Name</label>
             <input
               type="text"
               class="form-control"
               id="name"
+              name="name"
               placeholder="Enter your full name"
               required
             />
           </div>
 
           <div class="mb-3">
-            <label for="email" class="form-label text-start d-block"
-              >Email address</label
-            >
+            <label for="email" class="form-label text-start d-block">Email address</label>
             <input
               type="email"
               class="form-control"
               id="email"
+              name="email"
               placeholder="Enter your email"
               required
             />
           </div>
 
           <div class="mb-3">
-            <label for="password" class="form-label text-start d-block"
-              >Password</label
-            >
+            <label for="password" class="form-label text-start d-block">Password</label>
             <input
               type="password"
               class="form-control"
               id="password"
+              name="password"
               placeholder="Enter your password"
               required
             />
@@ -81,7 +102,7 @@
           <div class="text-center">
             <small>
               Already have an account?
-              <a href="login.html" class="text-decoration-none">Login here</a>
+              <a href="login.php" class="text-decoration-none">Login here</a>
             </small>
           </div>
         </form>
